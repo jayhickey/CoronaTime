@@ -28,6 +28,7 @@
 		E596DDE2243BA9180055D3F1 /* SelectedChartValueText.swift in Sources */ = {isa = PBXBuildFile; fileRef = E596DDE1243BA9180055D3F1 /* SelectedChartValueText.swift */; };
 		E596DDE8243BB6180055D3F1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E596DDE4243BB6170055D3F1 /* Assets.xcassets */; };
 		E596DDE9243BB6180055D3F1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E596DDE5243BB6170055D3F1 /* LaunchScreen.storyboard */; };
+		E5ADE550243C11ED0089D425 /* StateParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5ADE54F243C11ED0089D425 /* StateParser.swift */; };
 		E5B69DBB243AC85200EE3EEC /* Charts in Frameworks */ = {isa = PBXBuildFile; productRef = E5B69DBA243AC85200EE3EEC /* Charts */; };
 		E5B69DBD243AD69F00EE3EEC /* PersistentStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5B69DBC243AD69F00EE3EEC /* PersistentStore.swift */; };
 		E5B69DC0243AE51500EE3EEC /* UIColor+Hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5B69DBF243AE51500EE3EEC /* UIColor+Hex.swift */; };
@@ -85,6 +86,7 @@
 		E596DDE4243BB6170055D3F1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		E596DDE6243BB6170055D3F1 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		E596DDE7243BB6170055D3F1 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E5ADE54F243C11ED0089D425 /* StateParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateParser.swift; sourceTree = "<group>"; };
 		E5B69DBC243AD69F00EE3EEC /* PersistentStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistentStore.swift; sourceTree = "<group>"; };
 		E5B69DBF243AE51500EE3EEC /* UIColor+Hex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Hex.swift"; sourceTree = "<group>"; };
 		E5B69DD0243B056E00EE3EEC /* Environment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Environment.swift; sourceTree = "<group>"; };
@@ -169,6 +171,7 @@
 			isa = PBXGroup;
 			children = (
 				E56B94FF243AA764000F7E8F /* DataLoader.swift */,
+				E5ADE54F243C11ED0089D425 /* StateParser.swift */,
 				E5B69DBC243AD69F00EE3EEC /* PersistentStore.swift */,
 			);
 			path = Data;
@@ -380,6 +383,7 @@
 			files = (
 				E56B950A243AA886000F7E8F /* Store.swift in Sources */,
 				E5B69DBD243AD69F00EE3EEC /* PersistentStore.swift in Sources */,
+				E5ADE550243C11ED0089D425 /* StateParser.swift in Sources */,
 				E56B9501243AA764000F7E8F /* StateSnapshot.swift in Sources */,
 				E56B950E243AAA62000F7E8F /* AppReducer.swift in Sources */,
 				E5B69DD8243B347200EE3EEC /* DateFormatter+UpdatingFormatter.swift in Sources */,
