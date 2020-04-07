@@ -15,7 +15,7 @@ struct ChartView: UIViewRepresentable {
   let onValueSelected: (ChartDataEntry) -> Void
 
   func makeCoordinator() -> Coordinator {
-      Coordinator(self)
+    Coordinator(self)
   }
 
   func makeUIView(context: Context) -> LineChartView {
@@ -151,48 +151,48 @@ private final class DateValueFormatter: IAxisValueFormatter {
   }
 }
 
-public class LargeValueFormatter: NSObject, IValueFormatter, IAxisValueFormatter {
+private final class LargeValueFormatter: NSObject, IValueFormatter, IAxisValueFormatter {
 
-    /// Suffix to be appended after the values.
-    ///
-    /// **default**: suffix: ["", "k", "m", "b", "t"]
-    public var suffix = ["", "k", "m", "b", "t"]
+  /// Suffix to be appended after the values.
+  ///
+  /// **default**: suffix: ["", "k", "m", "b", "t"]
+  private var suffix = ["", "k", "m", "b", "t"]
 
-    /// An appendix text to be added at the end of the formatted value.
-    public var appendix: String?
+  /// An appendix text to be added at the end of the formatted value.
+  private var appendix: String?
 
-    public init(appendix: String? = nil) {
-        self.appendix = appendix
+  fileprivate init(appendix: String? = nil) {
+    self.appendix = appendix
+  }
+
+  fileprivate func format(value: Double) -> String {
+    var sig = value
+    var length = 0
+    let maxLength = suffix.count - 1
+
+    while sig >= 1000.0 && length < maxLength {
+      sig /= 1000.0
+      length += 1
     }
 
-    fileprivate func format(value: Double) -> String {
-        var sig = value
-        var length = 0
-        let maxLength = suffix.count - 1
+    var r = String(format: "%2.f", sig) + suffix[length]
 
-        while sig >= 1000.0 && length < maxLength {
-            sig /= 1000.0
-            length += 1
-        }
-
-        var r = String(format: "%2.f", sig) + suffix[length]
-
-        if let appendix = appendix {
-            r += appendix
-        }
-
-        return r
+    if let appendix = appendix {
+      r += appendix
     }
 
-    public func stringForValue(_ value: Double, axis: AxisBase?) -> String {
-        return format(value: value)
-    }
+    return r
+  }
 
-    public func stringForValue(
-        _ value: Double,
-        entry: ChartDataEntry,
-        dataSetIndex: Int,
-        viewPortHandler: ViewPortHandler?) -> String {
-        return format(value: value)
-    }
+  fileprivate func stringForValue(_ value: Double, axis: AxisBase?) -> String {
+    return format(value: value)
+  }
+
+  fileprivate func stringForValue(
+    _ value: Double,
+    entry: ChartDataEntry,
+    dataSetIndex: Int,
+    viewPortHandler: ViewPortHandler?) -> String {
+    return format(value: value)
+  }
 }
