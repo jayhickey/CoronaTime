@@ -9,7 +9,7 @@ import Charts
 import CovidLib
 
 struct ChartView: UIViewRepresentable {
-  let states: [[StateSnapshot]]
+  let states: [[DataSnapshot]]
   let type: ChartType
   let onValueDeselected: () -> Void
   let onValueSelected: (ChartDataEntry) -> Void
@@ -92,7 +92,7 @@ extension ChartView: Equatable {
   }
 }
 
-private func dataSets(for states: [[StateSnapshot]], type: ChartType) -> [LineChartDataSet] {
+private func dataSets(for states: [[DataSnapshot]], type: ChartType) -> [LineChartDataSet] {
   states
     .map { state in
       let dataSet = LineChartDataSet(
@@ -102,7 +102,7 @@ private func dataSets(for states: [[StateSnapshot]], type: ChartType) -> [LineCh
             y: Double($0.count(for: type))
           )
         },
-        label: state.first?.name
+        label: state.first?.state
       )
       dataSet.mode = .linear
 

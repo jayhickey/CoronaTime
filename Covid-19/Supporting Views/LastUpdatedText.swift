@@ -10,7 +10,7 @@ import CovidLib
 struct LastUpdatedText: View {
   @ObservedObject var store: Store
 
-  var mostRecentSnapshot: StateSnapshot? {
+  var mostRecentSnapshot: DataSnapshot? {
     store.value.states
     .compactMap({ $0.snapshots.last })
     .sorted()

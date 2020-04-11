@@ -10,9 +10,9 @@ public struct State: Codable, Identifiable {
   public let id = UUID()
   public let name: String
   public let FIPS: Int
-  public let snapshots: [StateSnapshot]
+  public let snapshots: [DataSnapshot]
 
-  internal init(name: String, FIPS: Int, snapshots: [StateSnapshot]) {
+  internal init(name: String, FIPS: Int, snapshots: [DataSnapshot]) {
     self.name = name
     self.FIPS = FIPS
     self.snapshots = snapshots.sorted()

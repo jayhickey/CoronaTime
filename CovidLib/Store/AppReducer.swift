@@ -6,38 +6,42 @@
 
 import Foundation
 
-public func appReducer(state: inout AppState, actions: AppAction) {
+public func appReducer(appState: inout AppState, actions: AppAction) {
   switch actions {
 
   // MARK: - Data Fetching
 
   case .fetchStates:
     AppEnvironment.dataLoader.fetchStates()
+  case .fetchCounties:
+    AppEnvironment.dataLoader.fetchCounties()
   case .setStates(let states):
-    state.states = states.sorted()
+    appState.states = states.sorted()
+  case .setCounties(let counties):
+    appState.counties = counties
   case .setTotal(let total):
-    state.totalUS = total
+    appState.totalUS = total
 
   // MARK: - UI
 
   case .selectedTab(let index):
-    state.selectedTab = index
+    appState.selectedTab = index
 
   // MARK: - Charts
 
   case .selectedChartItem(let chartName):
-    if state.chart.selectedChartStates.contains(chartName) {
-      state.chart.selectedChartStates.removeAll { $0 == chartName }
+    if appState.chart.selectedChartStates.contains(chartName) {
+      appState.chart.selectedChartStates.removeAll { $0 == chartName }
     }
     else {
-      state.chart.selectedChartStates.append(chartName)
+      appState.chart.selectedChartStates.append(chartName)
     }
   case .selectedChartType(let type):
-    state.chart.chartType = type
+    appState.chart.chartType = type
 
   case .selectedChartValue(let (date, value)?):
-    state.chart.selectedChartValue = ChartValue(date: date, value: value)
+    appState.chart.selectedChartValue = ChartValue(date: date, value: value)
   case .selectedChartValue(.none):
-    state.chart.selectedChartValue = nil
+    appState.chart.selectedChartValue = nil
   }
 }

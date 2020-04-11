@@ -5,23 +5,36 @@
 //
 
 import Foundation
+import CoreLocation
+import Combine
 
-struct StateSnapshotContainer: Codable {
-  let states: [StateSnapshot]
+class BundleClass {}
+
+struct DataSnapshotContainer: Codable {
+  let snapshots: [DataSnapshot]
 }
 
-enum StateParser {
-  static func states(from container: StateSnapshotContainer) -> [State] {
-    let groupedStates = Dictionary(grouping: container.states) { $0.name }
-    let groupedStatesWithDaily = Dictionary(uniqueKeysWithValues: groupedStates.map { (stateName, snapshots) in
+var FIPSToCoord: [String: [String: Any]] = {
+  guard let resourcePath = Bundle(for: BundleClass.self).path(forResource: "FIPS_to_coord", ofType: "json"),
+    let data = try? JSONSerialization.jsonObject(with: Data(contentsOf: URL(fileURLWithPath: resourcePath)), options: []) as? [String: [String: Any]] else {
+      return [:]
+  }
+  return data
+}()
+
+enum SnapshotsParser {
+  static func calculateDaily(with container: DataSnapshotContainer, groupedBy keyPath: KeyPath<DataSnapshot, String>) -> [String : [DataSnapshot]] {
+    let groupedStates = Dictionary(grouping: container.snapshots) { $0[keyPath: keyPath] }
+    return Dictionary(uniqueKeysWithValues: groupedStates.map { (stateName, snapshots) in
       (stateName,
-      snapshots.enumerated().map { (index: Int, snapshot: StateSnapshot) -> StateSnapshot in
+      snapshots.enumerated().map { (index: Int, snapshot: DataSnapshot) -> DataSnapshot in
         guard let prevSnapshot = snapshots[safe: index - 1] else {
           return snapshot
         }
-        return StateSnapshot(
+        return DataSnapshot(
           date: snapshot.date,
-          name: snapshot.name,
+          state: snapshot.state,
+          county: snapshot.county,
           FIPS: snapshot.FIPS,
           totalCases: snapshot.totalCases,
           totalDeaths: snapshot.totalDeaths,
@@ -30,29 +43,41 @@ enum StateParser {
         )
       })
     })
-
-    let states = groupedStatesWithDaily.keys.map { State(name: $0, FIPS: groupedStatesWithDaily[$0]!.first!.FIPS, snapshots: groupedStatesWithDaily[$0]!) }
-    return states
   }
 
-  static func totalSnapshots(for states: [State]) -> [StateSnapshot] {
+  static func updateLocations(for container: DataSnapshotContainer) -> DataSnapshotContainer {
+    return DataSnapshotContainer(
+      snapshots: container.snapshots
+        .map { snapshot -> DataSnapshot in
+          guard let dataLocation = FIPSToCoord[String(snapshot.FIPS)],
+            let latitude = dataLocation["lat"] as? Double,
+            let longitude = dataLocation["long"] as? Double else { return snapshot }
+          var mutableSnapshot = snapshot
+          mutableSnapshot.location = Location(latitude: latitude, longitude: longitude)
+          return mutableSnapshot
+      }
+    )
+  }
+
+  static func totalSnapshots(for states: [State]) -> [DataSnapshot] {
     let dates = states.compactMap { $0.snapshots.map { $0.date } }.flatMap { $0 }.uniques
 
     return dates
       .enumerated()
-      .map { (offset: Int, date: Date) -> StateSnapshot in
+      .map { (offset: Int, date: Date) -> DataSnapshot in
         let totals = states
           .compactMap { $0.snapshots.first(where: { $0.date == date }) }
-          .map { (totalCases: $0.totalCases, totalDeaths: $0.totalCases, dailyCases: $0.dailyCases, dailyDeaths: $0.dailyDeaths) }
+          .map { (totalCases: $0.totalCases, totalDeaths: $0.totalDeaths, dailyCases: $0.dailyCases, dailyDeaths: $0.dailyDeaths) }
           .reduce(into: (totalCases: 0, totalDeaths: 0, dailyCases: 0, dailyDeaths: 0), { result, snapshot in
             result.totalCases += snapshot.totalCases
             result.totalDeaths += snapshot.totalDeaths
             result.dailyCases += snapshot.dailyCases
             result.dailyDeaths += snapshot.dailyDeaths
           })
-        return StateSnapshot(
+        return DataSnapshot(
           date: date,
-          name: "United States Total",
+          state: "United States",
+          county: "N/A",
           FIPS: 0,
           totalCases: totals.totalCases,
           totalDeaths: totals.totalDeaths,
@@ -71,7 +96,7 @@ enum StateParser {
         Dictionary(uniqueKeysWithValues: zip(keys, $0.split(separator: ",")
           .map(String.init)))
       }),
-      let results = try? JSONSerialization.data(withJSONObject: ["states" : keyedLines], options: []) else {
+      let results = try? JSONSerialization.data(withJSONObject: ["snapshots" : keyedLines], options: []) else {
       return nil
     }
     return results

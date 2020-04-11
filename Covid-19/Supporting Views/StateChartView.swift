@@ -11,11 +11,11 @@ struct StateChartView: View {
   @ObservedObject var store: Store
   let type: ChartType
 
-  var selectedStates: [[StateSnapshot]] {
+  var selectedStates: [[DataSnapshot]] {
     // Total selected
     store.value.chart.selectedChartStates
       .compactMap {
-        selectedName in store.value.totalUS.first?.name == selectedName
+        selectedName in store.value.totalUS.first?.state == selectedName
           ? store.value.totalUS
           : nil
     }

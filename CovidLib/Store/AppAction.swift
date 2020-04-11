@@ -9,8 +9,10 @@ import Foundation
 public enum AppAction {
   // MARK: - Data Fetching
   case fetchStates
+  case fetchCounties
   case setStates([State])
-  case setTotal([StateSnapshot])
+  case setCounties([County])
+  case setTotal([DataSnapshot])
 
   // MARK: - UI
   case selectedTab(Int)

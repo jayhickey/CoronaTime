@@ -64,7 +64,7 @@ struct ChartsView: View {
 
   // MARK: - Private
 
-  private func subtitle(for snapshot: StateSnapshot?) -> String {
+  private func subtitle(for snapshot: DataSnapshot?) -> String {
     var numberFormatter: NumberFormatter {
       let f = NumberFormatter()
       f.locale = .autoupdatingCurrent
@@ -83,11 +83,11 @@ struct ChartsView: View {
   private func totalRow() -> MultipleSelectionRow? {
     guard let snapshot = store.value.totalUS.last else { return nil }
     return MultipleSelectionRow(
-      title: snapshot.name,
+      title: snapshot.state,
       subtitle: self.subtitle(for: snapshot),
-      isSelected: self.store.value.chart.selectedChartStates.contains(snapshot.name)) {
+      isSelected: self.store.value.chart.selectedChartStates.contains(snapshot.state)) {
         withAnimation {
-          self.store.dispatch(.selectedChartItem(snapshot.name))
+          self.store.dispatch(.selectedChartItem(snapshot.state))
         }
     }
   }
