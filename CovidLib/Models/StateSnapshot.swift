@@ -10,15 +10,21 @@ public struct StateSnapshot: Hashable {
   public let date: Date
   public let name: String
   public let FIPS: Int
-  public let cases: Int
-  public let deaths: Int
+  public let totalCases: Int
+  public let totalDeaths: Int
+  public let dailyCases: Int
+  public let dailyDeaths: Int
 
   public func count(for type: ChartType) -> Int {
     switch type {
-    case .cases:
-      return cases
-    case .deaths:
-      return deaths
+    case .dailyCases:
+      return dailyCases
+    case .dailyDeaths:
+      return dailyDeaths
+    case .totalCases:
+      return totalCases
+    case .totalDeaths:
+      return totalDeaths
     }
   }
 }
@@ -35,8 +41,10 @@ extension StateSnapshot: Codable {
     case date = "date"
     case name = "state"
     case FIPS = "fips"
-    case cases = "cases"
-    case deaths = "deaths"
+    case totalCases = "cases"
+    case totalDeaths = "deaths"
+    case dailyCases = "dailyCases"
+    case dailyDeaths = "dailyDeaths"
   }
 
   public init(from decoder: Decoder) throws {
@@ -45,8 +53,10 @@ extension StateSnapshot: Codable {
     date = StateSnapshot.formatter.date(from: dateString)!
     name = try container.decode(String.self, forKey: .name)
     FIPS = Int(try container.decode(String.self, forKey: .FIPS))!
-    cases = Int(try container.decode(String.self, forKey: .cases))!
-    deaths = Int(try container.decode(String.self, forKey: .deaths))!
+    totalCases = Int(try container.decode(String.self, forKey: .totalCases))!
+    totalDeaths = Int(try container.decode(String.self, forKey: .totalDeaths))!
+    dailyCases = Int(try container.decodeIfPresent(String.self, forKey: .dailyCases) ?? "0")!
+    dailyDeaths = Int(try container.decodeIfPresent(String.self, forKey: .dailyDeaths) ?? "0")!
   }
 
   public func encode(to encoder: Encoder) throws {
@@ -54,8 +64,10 @@ extension StateSnapshot: Codable {
     try container.encode(StateSnapshot.formatter.string(from: date), forKey: .date)
     try container.encode(name, forKey: .name)
     try container.encode(String(FIPS), forKey: .FIPS)
-    try container.encode(String(cases), forKey: .cases)
-    try container.encode(String(deaths), forKey: .deaths)
+    try container.encode(String(totalCases), forKey: .totalCases)
+    try container.encode(String(totalDeaths), forKey: .totalDeaths)
+    try container.encodeIfPresent(String(dailyCases), forKey: .dailyCases)
+    try container.encodeIfPresent(String(dailyDeaths), forKey: .dailyDeaths)
   }
 
   private static let formatter: DateFormatter = {

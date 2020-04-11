@@ -49,6 +49,6 @@ struct StateChartView: View {
 
 struct StateChartView_Previews: PreviewProvider {
   static var previews: some View {
-    StateChartView(store: AppEnvironment.store, type: .deaths)
+    StateChartView(store: AppEnvironment.store, type: .totalDeaths)
   }
 }

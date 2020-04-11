@@ -22,7 +22,7 @@ struct ChartsView: View {
   var body: some View {
     VStack {
       VStack {
-        Text("US Totals: \(store.value.totalUS.last?.cases ?? 0) cases • \(store.value.totalUS.last?.deaths ?? 0) deaths")
+        Text("US Totals: \(store.value.totalUS.last?.totalCases ?? 0) cases • \(store.value.totalUS.last?.totalDeaths ?? 0) deaths")
           .font(.headline)
         LastUpdatedText(store: store)
           .font(.footnote)
@@ -74,8 +74,8 @@ struct ChartsView: View {
     }
     
     guard let snapshot = snapshot,
-      let cases = numberFormatter.string(from: NSNumber(value: snapshot.cases)),
-      let deaths = numberFormatter.string(from: NSNumber(value: snapshot.deaths))
+      let cases = numberFormatter.string(from: NSNumber(value: snapshot.totalCases)),
+      let deaths = numberFormatter.string(from: NSNumber(value: snapshot.totalDeaths))
     else { return "" }
     return "\(cases) cases • \(deaths) deaths"
   }

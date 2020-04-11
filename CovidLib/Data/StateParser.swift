@@ -13,7 +13,25 @@ struct StateSnapshotContainer: Codable {
 enum StateParser {
   static func states(from container: StateSnapshotContainer) -> [State] {
     let groupedStates = Dictionary(grouping: container.states) { $0.name }
-    let states = groupedStates.keys.map { State(name: $0, FIPS: groupedStates[$0]!.first!.FIPS, snapshots: groupedStates[$0]!) }
+    let groupedStatesWithDaily = Dictionary(uniqueKeysWithValues: groupedStates.map { (stateName, snapshots) in
+      (stateName,
+      snapshots.enumerated().map { (index: Int, snapshot: StateSnapshot) -> StateSnapshot in
+        guard let prevSnapshot = snapshots[safe: index - 1] else {
+          return snapshot
+        }
+        return StateSnapshot(
+          date: snapshot.date,
+          name: snapshot.name,
+          FIPS: snapshot.FIPS,
+          totalCases: snapshot.totalCases,
+          totalDeaths: snapshot.totalDeaths,
+          dailyCases: snapshot.totalCases - prevSnapshot.totalCases,
+          dailyDeaths: snapshot.totalDeaths - prevSnapshot.totalDeaths
+        )
+      })
+    })
+
+    let states = groupedStatesWithDaily.keys.map { State(name: $0, FIPS: groupedStatesWithDaily[$0]!.first!.FIPS, snapshots: groupedStatesWithDaily[$0]!) }
     return states
   }
 
@@ -21,15 +39,26 @@ enum StateParser {
     let dates = states.compactMap { $0.snapshots.map { $0.date } }.flatMap { $0 }.uniques
 
     return dates
-      .map { (date: Date) -> StateSnapshot in
+      .enumerated()
+      .map { (offset: Int, date: Date) -> StateSnapshot in
         let totals = states
           .compactMap { $0.snapshots.first(where: { $0.date == date }) }
-          .map { (cases: $0.cases, deaths: $0.deaths) }
-          .reduce(into: (cases: 0, deaths: 0), { result, snapshot in
-            result.cases += snapshot.cases
-            result.deaths += snapshot.deaths
+          .map { (totalCases: $0.totalCases, totalDeaths: $0.totalCases, dailyCases: $0.dailyCases, dailyDeaths: $0.dailyDeaths) }
+          .reduce(into: (totalCases: 0, totalDeaths: 0, dailyCases: 0, dailyDeaths: 0), { result, snapshot in
+            result.totalCases += snapshot.totalCases
+            result.totalDeaths += snapshot.totalDeaths
+            result.dailyCases += snapshot.dailyCases
+            result.dailyDeaths += snapshot.dailyDeaths
           })
-        return StateSnapshot(date: date, name: "United States Total", FIPS: 0, cases: totals.cases, deaths: totals.deaths)
+        return StateSnapshot(
+          date: date,
+          name: "United States Total",
+          FIPS: 0,
+          totalCases: totals.totalCases,
+          totalDeaths: totals.totalDeaths,
+          dailyCases: totals.dailyCases,
+          dailyDeaths: totals.dailyDeaths
+        )
     }
     .sorted()
   }
@@ -52,15 +81,24 @@ enum StateParser {
 // MARK: - Array extensions
 
 private extension Array where Element: Hashable {
-    var uniques: Array {
-        var buffer = Array()
-        var added = Set<Element>()
-        for elem in self {
-            if !added.contains(elem) {
-                buffer.append(elem)
-                added.insert(elem)
-            }
-        }
-        return buffer
+  var uniques: Array {
+    var buffer = Array()
+    var added = Set<Element>()
+    for elem in self {
+      if !added.contains(elem) {
+        buffer.append(elem)
+        added.insert(elem)
+      }
     }
+    return buffer
+  }
+
+  subscript(safe index: Int) -> Element? {
+    guard index >= 0, index < endIndex else {
+      return nil
+    }
+
+    return self[index]
+  }
+
 }

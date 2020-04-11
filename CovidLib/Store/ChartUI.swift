@@ -7,8 +7,10 @@
 import Foundation
 
 public enum ChartType: String, Codable, CaseIterable {
-  case cases
-  case deaths
+  case totalCases = "Total Cases"
+  case totalDeaths = "Total Deaths"
+  case dailyCases = "Daily Cases"
+  case dailyDeaths = "Daily Deaths"
 }
 
 public struct ChartValue: Codable {
@@ -18,6 +20,6 @@ public struct ChartValue: Codable {
 
 public struct ChartUI: Codable {
   public internal(set) var selectedChartStates: [String] = []
-  public internal(set) var chartType = ChartType.cases
+  public internal(set) var chartType = ChartType.totalCases
   public internal(set) var selectedChartValue: ChartValue? = nil
 }
