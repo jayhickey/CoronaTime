@@ -15,8 +15,8 @@ struct StateChartView: View {
     // Total selected
     store.value.chart.selectedChartStates
       .compactMap {
-        selectedName in store.value.total.first?.name == selectedName
-          ? store.value.total
+        selectedName in store.value.totalUS.first?.name == selectedName
+          ? store.value.totalUS
           : nil
     }
     +

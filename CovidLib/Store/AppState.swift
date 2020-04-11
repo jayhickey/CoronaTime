@@ -10,5 +10,5 @@ public struct AppState: Codable {
   public internal(set) var selectedTab: Int = 0
   public internal(set) var states: [State] = []
   public internal(set) var chart: ChartUI = ChartUI()
-  public internal(set) var total: [StateSnapshot] = []
+  public internal(set) var totalUS: [StateSnapshot] = []
 }

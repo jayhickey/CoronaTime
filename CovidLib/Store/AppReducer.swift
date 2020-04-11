@@ -16,7 +16,7 @@ public func appReducer(state: inout AppState, actions: AppAction) {
   case .setStates(let states):
     state.states = states.sorted()
   case .setTotal(let total):
-    state.total = total
+    state.totalUS = total
 
   // MARK: - UI
 

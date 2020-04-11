@@ -22,7 +22,7 @@ struct ChartsView: View {
   var body: some View {
     VStack {
       VStack {
-        Text("US Totals: \(store.value.total.last?.cases ?? 0) cases • \(store.value.total.last?.deaths ?? 0) deaths")
+        Text("US Totals: \(store.value.totalUS.last?.cases ?? 0) cases • \(store.value.totalUS.last?.deaths ?? 0) deaths")
           .font(.headline)
         LastUpdatedText(store: store)
           .font(.footnote)
@@ -81,7 +81,7 @@ struct ChartsView: View {
   }
 
   private func totalRow() -> MultipleSelectionRow? {
-    guard let snapshot = store.value.total.last else { return nil }
+    guard let snapshot = store.value.totalUS.last else { return nil }
     return MultipleSelectionRow(
       title: snapshot.name,
       subtitle: self.subtitle(for: snapshot),
