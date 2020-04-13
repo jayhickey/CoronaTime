@@ -23,7 +23,8 @@ struct HomeView: View {
           }
       }.tag(0)
       
-      Text("Coming Soon")
+      CoivdMapView(store: store)
+        .edgesIgnoringSafeArea(.all)
         .tabItem {
           VStack {
             Image(systemName: "map")

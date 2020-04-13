@@ -36,6 +36,10 @@
 		E5B69DD1243B056E00EE3EEC /* Environment.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5B69DD0243B056E00EE3EEC /* Environment.swift */; };
 		E5B69DD3243B144900EE3EEC /* ChartUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5B69DD2243B144900EE3EEC /* ChartUI.swift */; };
 		E5B69DD8243B347200EE3EEC /* DateFormatter+UpdatingFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5B69DD7243B347200EE3EEC /* DateFormatter+UpdatingFormatter.swift */; };
+		E5D940A22442B294006B519F /* FIPS_to_coord.json in Resources */ = {isa = PBXBuildFile; fileRef = E5D940A12442B294006B519F /* FIPS_to_coord.json */; };
+		E5D993AC24428BE100493A3C /* CoivdMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5D993AB24428BE100493A3C /* CoivdMapView.swift */; };
+		E5D993AE24428C8700493A3C /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5D993AD24428C8700493A3C /* MapView.swift */; };
+		E5D993B02442A72E00493A3C /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5D993AF2442A72E00493A3C /* Location.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -94,6 +98,10 @@
 		E5B69DD0243B056E00EE3EEC /* Environment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Environment.swift; sourceTree = "<group>"; };
 		E5B69DD2243B144900EE3EEC /* ChartUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartUI.swift; sourceTree = "<group>"; };
 		E5B69DD7243B347200EE3EEC /* DateFormatter+UpdatingFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DateFormatter+UpdatingFormatter.swift"; sourceTree = "<group>"; };
+		E5D940A12442B294006B519F /* FIPS_to_coord.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = FIPS_to_coord.json; sourceTree = "<group>"; };
+		E5D993AB24428BE100493A3C /* CoivdMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoivdMapView.swift; sourceTree = "<group>"; };
+		E5D993AD24428C8700493A3C /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
+		E5D993AF2442A72E00493A3C /* Location.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Location.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -166,6 +174,7 @@
 				E56B94FB243AA764000F7E8F /* DataSnapshot.swift */,
 				E56B94FC243AA764000F7E8F /* State.swift */,
 				E525FB58244280EA001606DD /* County.swift */,
+				E5D993AF2442A72E00493A3C /* Location.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -196,6 +205,7 @@
 		E5905560243BB74F007E6949 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				E5D940A12442B294006B519F /* FIPS_to_coord.json */,
 				E5905561243BB74F007E6949 /* Info.plist */,
 			);
 			path = "Supporting Files";
@@ -206,6 +216,7 @@
 			children = (
 				E596DDD2243BA74E0055D3F1 /* HomeView.swift */,
 				E596DDD3243BA74E0055D3F1 /* ChartsView.swift */,
+				E5D993AB24428BE100493A3C /* CoivdMapView.swift */,
 			);
 			path = Screens;
 			sourceTree = "<group>";
@@ -219,6 +230,7 @@
 				E596DDD8243BA74E0055D3F1 /* MultipleSelectionRow.swift */,
 				E596DDDF243BA7AD0055D3F1 /* LastUpdatedText.swift */,
 				E596DDE1243BA9180055D3F1 /* SelectedChartValueText.swift */,
+				E5D993AD24428C8700493A3C /* MapView.swift */,
 			);
 			path = "Supporting Views";
 			sourceTree = "<group>";
@@ -356,6 +368,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E5D940A22442B294006B519F /* FIPS_to_coord.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -367,8 +380,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				E596DDDC243BA74E0055D3F1 /* ChartTypePicker.swift in Sources */,
+				E5D993AC24428BE100493A3C /* CoivdMapView.swift in Sources */,
 				E56B94C2243A7EEB000F7E8F /* AppDelegate.swift in Sources */,
 				E596DDE2243BA9180055D3F1 /* SelectedChartValueText.swift in Sources */,
+				E5D993AE24428C8700493A3C /* MapView.swift in Sources */,
 				E56B94C4243A7EEB000F7E8F /* SceneDelegate.swift in Sources */,
 				E596DDDA243BA74E0055D3F1 /* ChartsView.swift in Sources */,
 				E596DDDD243BA74E0055D3F1 /* StateChartView.swift in Sources */,
@@ -391,6 +406,7 @@
 				E525FB59244280EA001606DD /* County.swift in Sources */,
 				E56B950E243AAA62000F7E8F /* AppReducer.swift in Sources */,
 				E5B69DD8243B347200EE3EEC /* DateFormatter+UpdatingFormatter.swift in Sources */,
+				E5D993B02442A72E00493A3C /* Location.swift in Sources */,
 				E5B69DD3243B144900EE3EEC /* ChartUI.swift in Sources */,
 				E5B69DD1243B056E00EE3EEC /* Environment.swift in Sources */,
 				E56B9502243AA764000F7E8F /* State.swift in Sources */,
