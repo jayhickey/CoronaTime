@@ -1,4 +1,4 @@
-# Covid-19
+# CoronaTime
 
 An iOS app for tracking the spread of COVID-19 in the United States.
 
