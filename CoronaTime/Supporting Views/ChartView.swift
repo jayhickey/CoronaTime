@@ -102,7 +102,7 @@ private func dataSets(for states: [[DataSnapshot]], type: ChartType) -> [LineCha
             y: Double($0.count(for: type))
           )
         },
-        label: state.first?.state
+        label: state.first?.state ?? ""
       )
       dataSet.mode = .linear
 
@@ -139,8 +139,8 @@ private let chartColors = [
   UIColor(rgb: 0x2c3e50)
 ]
 
-private final class DateValueFormatter: IAxisValueFormatter {
-  func stringForValue(_ value: Double, axis: AxisBase?) -> String {
+private final class DateValueFormatter: IndexAxisValueFormatter {
+  override func stringForValue(_ value: Double, axis: AxisBase?) -> String {
     return formatter.string(from: Date(timeIntervalSince1970: value))
   }
 
@@ -148,10 +148,11 @@ private final class DateValueFormatter: IAxisValueFormatter {
 
   init(formatter: DateFormatter) {
     self.formatter = formatter
+    super.init()
   }
 }
 
-private final class LargeValueFormatter: NSObject, IValueFormatter, IAxisValueFormatter {
+private final class LargeValueFormatter: IndexAxisValueFormatter {
 
   /// Suffix to be appended after the values.
   ///
@@ -163,6 +164,7 @@ private final class LargeValueFormatter: NSObject, IValueFormatter, IAxisValueFo
 
   fileprivate init(appendix: String? = nil) {
     self.appendix = appendix
+    super.init()
   }
 
   fileprivate func format(value: Double) -> String {
@@ -184,7 +186,7 @@ private final class LargeValueFormatter: NSObject, IValueFormatter, IAxisValueFo
     return r
   }
 
-  fileprivate func stringForValue(_ value: Double, axis: AxisBase?) -> String {
+  fileprivate override func stringForValue(_ value: Double, axis: AxisBase?) -> String {
     return format(value: value)
   }
 

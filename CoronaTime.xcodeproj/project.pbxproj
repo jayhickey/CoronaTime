@@ -68,7 +68,7 @@
 
 /* Begin PBXFileReference section */
 		E525FB58244280EA001606DD /* County.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = County.swift; sourceTree = "<group>"; };
-		E56B94BE243A7EEB000F7E8F /* CoronaTime.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "CoronaTime.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		E56B94BE243A7EEB000F7E8F /* CoronaTime.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CoronaTime.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E56B94C1243A7EEB000F7E8F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E56B94C3243A7EEB000F7E8F /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		E56B94E7243AA70C000F7E8F /* MyPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = MyPlayground.playground; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
@@ -153,7 +153,7 @@
 				E5B69DBE243AE50B00EE3EEC /* Extensions */,
 				E596DDE3243BB6170055D3F1 /* Supporting Files */,
 			);
-			path = "CoronaTime";
+			path = CoronaTime;
 			sourceTree = "<group>";
 		};
 		E56B94EE243AA745000F7E8F /* CoronaTimeLib */ = {
@@ -288,11 +288,11 @@
 			dependencies = (
 				E56B94F3243AA745000F7E8F /* PBXTargetDependency */,
 			);
-			name = "CoronaTime";
+			name = CoronaTime;
 			packageProductDependencies = (
 				E5B69DBA243AC85200EE3EEC /* Charts */,
 			);
-			productName = "CoronaTime";
+			productName = CoronaTime;
 			productReference = E56B94BE243A7EEB000F7E8F /* CoronaTime.app */;
 			productType = "com.apple.product-type.application";
 		};
@@ -321,7 +321,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1120;
-				LastUpgradeCheck = 1120;
+				LastUpgradeCheck = 1340;
 				ORGANIZATIONNAME = "Jay Hickey";
 				TargetAttributes = {
 					E56B94BD243A7EEB000F7E8F = {
@@ -464,6 +464,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -524,6 +525,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -565,7 +567,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.jayhickey.CoronaTime";
+				PRODUCT_BUNDLE_IDENTIFIER = com.jayhickey.CoronaTime;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -585,7 +587,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.jayhickey.CoronaTime";
+				PRODUCT_BUNDLE_IDENTIFIER = com.jayhickey.CoronaTime;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -684,7 +686,7 @@
 			repositoryURL = "https://github.com/danielgindi/Charts";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 3.4.0;
+				minimumVersion = 4.0.3;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */

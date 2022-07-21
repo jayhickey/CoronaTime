@@ -17,30 +17,41 @@ extension MKMapView {
   }
 }
 
-private class Annotation: NSObject, MKAnnotation {
+private class SnapshotAnnotation: NSObject, MKAnnotation {
   var coordinate: CLLocationCoordinate2D {
     return snapshot.location!.coordinate
   }
+
+  var radius: CGFloat = 0
 
   let snapshot: DataSnapshot
 
   init(snapshot: DataSnapshot) {
     self.snapshot = snapshot
   }
+
+  override func isEqual(_ object: Any?) -> Bool {
+    guard let object = object as? SnapshotAnnotation else { return false }
+    return object.snapshot == snapshot && object.radius == radius
+  }
+
+  static func == (lhs: SnapshotAnnotation, rhs: SnapshotAnnotation) -> Bool {
+    return lhs.snapshot == rhs.snapshot
+      && lhs.radius == rhs.radius
+  }
 }
 
-private class AnnotationView: MKAnnotationView {
+private class SnapshotAnnotationView: MKAnnotationView {
 
-  var snapshot: DataSnapshot?
+  private let containerView: UIView = {
+    let container = UIView()
+    container.backgroundColor = UIColor.red.withAlphaComponent(0.2)
+    container.clipsToBounds = true
+    container.translatesAutoresizingMaskIntoConstraints = false
+    return container
+  }()
 
-//  private var radius: CGFloat {
-//    let value = CGFloat(number ?? 0)
-//    return 10 + log( 1 + value) * CGFloat(mapZoomLevel - 2.2)
-//  }
-
-  private var containerView = UIView()
-
-  private lazy var countLabel: UILabel = {
+  private let countLabel: UILabel = {
     let countLabel = UILabel()
     countLabel.translatesAutoresizingMaskIntoConstraints = false
     countLabel.backgroundColor = .clear
@@ -53,23 +64,18 @@ private class AnnotationView: MKAnnotationView {
     return countLabel
   }()
 
+  private lazy var containerWidthAnchor = containerView.widthAnchor.constraint(equalToConstant: 10)
+  private lazy var containerHeightAnchor = containerView.heightAnchor.constraint(equalTo: containerView.widthAnchor)
+
   override init(annotation: MKAnnotation?, reuseIdentifier: String?) {
     super.init(annotation: annotation, reuseIdentifier: reuseIdentifier)
-    translatesAutoresizingMaskIntoConstraints = false
-
-    containerView.translatesAutoresizingMaskIntoConstraints = false
-    containerView.addSubview(countLabel)
-
-    NSLayoutConstraint.activate([
-      countLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
-      countLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
-      countLabel.topAnchor.constraint(equalTo: containerView.topAnchor),
-      countLabel.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
-    ])
 
     addSubview(containerView)
-    containerView.layoutIfNeeded()
-    frame.size = CGSize(width: 200, height: 200)
+
+    NSLayoutConstraint.activate([
+      containerView.leadingAnchor.constraint(equalTo: leadingAnchor),
+      containerView.topAnchor.constraint(equalTo: topAnchor),
+    ])
   }
 
   required init?(coder aDecoder: NSCoder) {
@@ -78,64 +84,92 @@ private class AnnotationView: MKAnnotationView {
 
   override func layoutSubviews() {
     super.layoutSubviews()
-//    bounds = containerView.bounds
+    invalidateIntrinsicContentSize()
+    frame.size = intrinsicContentSize
   }
 
   override func prepareForReuse() {
     super.layoutSubviews()
-//    bounds = containerView.bounds
     countLabel.text = nil
   }
 
   override func prepareForDisplay() {
-    if let snapshot = snapshot {
-      countLabel.text = "\(snapshot.dailyDeaths)"
+    super.prepareForDisplay()
+    if let annotation = annotation as? SnapshotAnnotation {
+      countLabel.text = "\(annotation.snapshot.dailyDeaths)"
+      containerWidthAnchor.constant = annotation.radius
+      containerView.layer.cornerRadius = annotation.radius / 2
     }
-    self.backgroundColor = .red
-    containerView.layoutIfNeeded()
-//    bounds = containerView.bounds
-//    self.layer.cornerRadius = self.frame.width / 2
-//
-//    self.containerView.frame = self.frame
-//    self.containerView.layer.cornerRadius = self.layer.cornerRadius
+
+    containerWidthAnchor.isActive = true
+    containerHeightAnchor.isActive = true
+
+    setNeedsLayout()
+  }
+
+  override var intrinsicContentSize: CGSize {
+    let size = containerView.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
+    return size
   }
 }
 
 
 class Coordinator: NSObject, MKMapViewDelegate {
   var parent: MapView
+  var snapshots: [DataSnapshot] = []
 
   init(_ parent: MapView) {
     self.parent = parent
   }
 
   func reloadAnnotations(on mapView: MKMapView, with snapshots: [DataSnapshot]) {
-    mapView.removeAnnotations(mapView.annotations)
+    self.snapshots = snapshots
 
-    mapView.addAnnotations(
-      snapshots
-        .filter { $0.location != nil }
-        .map(Annotation.init)
-    )
+    let newAnnotations = annotations(for: mapView.zoomLevel)
+    if newAnnotations != mapView.annotations.compactMap({ $0 as? SnapshotAnnotation }) {
+      mapView.removeAnnotations(mapView.annotations)
+      mapView.addAnnotations(newAnnotations)
+    }
   }
 
   // MARK: - MKMapViewDelegate
 
   func mapViewDidChangeVisibleRegion(_ mapView: MKMapView) {
     print(mapView.zoomLevel)
+    reloadAnnotations(on: mapView, with: snapshots)
   }
 
   func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-    guard let annotation = annotation as? Annotation else { return nil }
-    let annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: String(describing: AnnotationView.self), for: annotation) as? AnnotationView
-
-    annotationView?.snapshot = annotation.snapshot
-    annotationView?.prepareForDisplay()
-    return annotationView
+    guard annotation.isKind(of: SnapshotAnnotation.self) else { return nil }
+    return mapView.dequeueReusableAnnotationView(withIdentifier: String(describing: SnapshotAnnotationView.self), for: annotation)
   }
 
   func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
     print(view)
+  }
+
+  private func annotations(for zoomLevel: CGFloat) -> [SnapshotAnnotation] {
+    let annotations = snapshots
+    .filter { $0.location != nil }
+    .map(SnapshotAnnotation.init)
+
+    switch zoomLevel {
+    case _ where zoomLevel > 7:
+      annotations
+        .forEach { $0.radius = 50 }
+    case _ where zoomLevel > 6:
+      annotations
+        .forEach { $0.radius = 30 }
+    case _ where zoomLevel > 5:
+      annotations
+        .forEach { $0.radius = 10 }
+    case _ where zoomLevel > 4:
+      annotations
+        .forEach { $0.radius = 5 }
+    default:
+      break
+    }
+    return annotations
   }
 }
 
@@ -151,8 +185,8 @@ struct MapView: UIViewRepresentable {
     mapView.delegate = context.coordinator
     mapView.mapType = .mutedStandard
     mapView.register(
-      AnnotationView.self,
-      forAnnotationViewWithReuseIdentifier: String(describing: AnnotationView.self)
+      SnapshotAnnotationView.self,
+      forAnnotationViewWithReuseIdentifier: String(describing: SnapshotAnnotationView.self)
     )
     return mapView
   }
